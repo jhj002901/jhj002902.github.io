@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenEden Dashboard | Research & News Hub</title>
+  <meta name="description" content="OpenEden(OpenEden) 코인 리서치 대시보드: 가격/지표/차트/뉴스/메모/체크리스트를 한 화면에." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg0:#070A12;
+      --bg1:#0B1022;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.08);
+      --bd:rgba(255,255,255,.12);
+      --txt:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.62);
+      --muted2:rgba(255,255,255,.48);
+      --accent:#6EE7FF;
+      --accent2:#A78BFA;
+      --good:#34D399;
+      --bad:#FB7185;
+      --warn:#FBBF24;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --r:18px;
+      --r2:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(110,231,255,.18), transparent 55%),
+        radial-gradient(900px 700px at 85% 25%, rgba(167,139,250,.18), transparent 50%),
+        radial-gradient(900px 700px at 45% 85%, rgba(52,211,153,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1200px; margin:0 auto; padding:28px 18px 80px}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; margin-bottom:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(110,231,255,.9), rgba(167,139,250,.9));
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 55%);
+      transform:rotate(20deg);
+    }
+    .brand h1{
+      font-family: Outfit, Pretendard, sans-serif;
+      font-size:18px; margin:0; letter-spacing:.2px;
+    }
+    .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
+    .pillbar{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:999px;
+      border:1px solid var(--bd);
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(10px);
+      font-size:12px; color:var(--muted);
+    }
+    .pill strong{color:var(--txt); font-weight:600}
+    .btn{
+      cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--bd);
+      background: rgba(255,255,255,.05);
+      color:var(--txt);
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{background: rgba(255,255,255,.08)}
+    .btn:active{transform: translateY(1px)}
+    .btn.primary{
+      border-color: rgba(110,231,255,.35);
+      background: linear-gradient(135deg, rgba(110,231,255,.22), rgba(167,139,250,.18));
+    }
+    .btn.small{padding:8px 10px; border-radius:10px; font-size:12px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .pillbar{justify-content:flex-start}
+    }
+    .card{
+      border:1px solid var(--bd);
+      background: var(--card);
+      border-radius: var(--r2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(12px);
+    }
+    .card .hd{
+      padding:16px 16px 10px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+    }
+    .card .hd h2{
+      margin:0;
+      font-family: Outfit, Pretendard, sans-serif;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .card .hd .sub{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .card .bd{padding:14px 16px 16px}
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+    }
+    @media (max-width: 980px){
+      .kpi{grid-template-columns: repeat(2, 1fr)}
+    }
+    .k{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: var(--r);
+      padding:12px;
+      min-height:86px;
+    }
+    .k .t{font-size:12px; color:var(--muted); display:flex; align-items:center; justify-content:space-between; gap:8px}
+    .k .v{font-size:20px; font-family: Outfit, Pretendard, sans-serif; margin-top:8px}
+    .k .c{font-size:12px; margin-top:6px}
+    .delta.up{color:var(--good)}
+    .delta.down{color:var(--bad)}
+    .delta.flat{color:var(--warn)}
+    .row{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .row .spacer{flex:1}
+    .input{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:var(--txt);
+      outline:none;
+    }
+    .input:focus{border-color: rgba(110,231,255,.40)}
+    .seg{
+      display:inline-flex; border:1px solid rgba(255,255,255,.12);
+      border-radius: 14px; overflow:hidden;
+      background: rgba(0,0,0,.20);
+    }
+    .seg button{
+      cursor:pointer;
+      padding:10px 12px;
+      border:0;
+      background: transparent;
+      color: var(--muted);
+      font-size:12px;
+    }
+    .seg button.active{
+      background: rgba(255,255,255,.08);
+      color: var(--txt);
+    }
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--r);
+      padding:12px;
+      display:flex; gap:12px; align-items:flex-start;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      margin-top:4px;
+      background: rgba(110,231,255,.9);
+      box-shadow: 0 0 20px rgba(110,231,255,.35);
+      flex:0 0 auto;
+    }
+    .item h3{margin:0; font-size:13px}
+    .item p{margin:6px 0 0; font-size:12px; color:var(--muted); line-height:1.45}
+    .item .meta{margin-top:8px; font-size:11px; color:var(--muted2)}
+    .two{
+      display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    }
+    @media (max-width: 980px){ .two{grid-template-columns:1fr} }
+    .tvbox{
+      border-radius: var(--r2);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      min-height: 420px;
+    }
+    .note{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    textarea{
+      width:100%;
+      min-height:150px;
+      resize:vertical;
+      padding:12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:var(--txt);
+      outline:none;
+      line-height:1.5;
+    }
+    textarea:focus{border-color: rgba(167,139,250,.40)}
+    .chk{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .chk label{
+      display:flex; gap:10px; align-items:flex-start;
+      font-size:13px; color:var(--txt);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding:10px 12px; border-radius: 14px;
+    }
+    .chk input{margin-top:2px}
+    .foot{
+      margin-top:14px;
+      font-size:12px;
+      color:var(--muted2);
+      line-height:1.55;
+    }
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      color: var(--txt);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      font-size:12px;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size:11px;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:11px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.28);
+      color: rgba(255,255,255,.82);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>OpenEden Research Hub</h1>
+          <p>가격 · 지표 · 차트 · 뉴스 · 메모 · 체크리스트 (GitHub Pages 단일 파일)</p>
+        </div>
+      </div>
+
+      <div class="pillbar">
+        <div class="pill"><span>데이터</span> <strong id="dataSource">CoinGecko + TradingView</strong></div>
+        <div class="pill"><span>업데이트</span> <strong id="lastUpdated">-</strong></div>
+        <button class="btn primary" id="btnRefresh" title="데이터 새로고침 (R)">
+          ↻ 새로고침 <span class="kbd">R</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="card">
+        <div class="hd">
+          <div>
+            <h2>오픈에덴 핵심 지표</h2>
+            <p class="sub">가격/변동/시총/거래대금(24h) · 참고용</p>
+          </div>
+          <div class="row">
+            <span class="badge">표시 통화: <b style="color:var(--txt)">&nbsp;KRW</b></span>
+            <span class="badge">기준: <span class="muted2">현물 스팟</span></span>
+          </div>
+        </div>
+
+        <div class="bd">
+          <div class="kpi">
+            <div class="k">
+              <div class="t">현재가 (KRW) <span class="muted2" id="sym">-</span></div>
+              <div class="v" id="priceKrw">-</div>
+              <div class="c" id="priceUsd" class="muted">-</div>
+            </div>
+            <div class="k">
+              <div class="t">24h 변동률</div>
+              <div class="v" id="chg24h">-</div>
+              <div class="c muted" id="range24h">-</div>
+            </div>
+            <div class="k">
+              <div class="t">시가총액 (KRW)</div>
+              <div class="v" id="mcap">-</div>
+              <div class="c muted">참고: 실시간 변동</div>
+            </div>
+            <div class="k">
+              <div class="t">거래대금 24h (KRW)</div>
+              <div class="v" id="vol24h">-</div>
+              <div class="c muted">유동성 체크</div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="two">
+            <div class="card" style="box-shadow:none">
+              <div class="hd">
+                <div>
+                  <h2>차트 (TradingView)</h2>
+                  <p class="sub">원클릭으로 일봉/주봉 전환</p>
+                </div>
+                <div class="seg" role="tablist" aria-label="차트 타임프레임">
+                  <button class="active" data-tf="D" id="tfD">일봉</button>
+                  <button data-tf="W" id="tfW">주봉</button>
+                </div>
+              </div>
+              <div class="bd">
+                <div class="tvbox" id="tvContainer" aria-label="TradingView chart"></div>
+                <div class="foot">
+                  ⚠️ TradingView 심볼이 거래소/상장 상황에 따라 다를 수 있어. 차트가 안 뜨면 오른쪽 “링크”에서 거래소 차트로 확인해줘.
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="box-shadow:none">
+              <div class="hd">
+                <div>
+                  <h2>빠른 링크 (실전 리서치)</h2>
+                  <p class="sub">공식/문서/가격/검색</p>
+                </div>
+              </div>
+              <div class="bd">
+                <div class="list" id="quickLinks"></div>
+                <div style="height:10px"></div>
+                <div class="row">
+                  <input class="input" id="searchQuery" placeholder="뉴스/키워드 검색 (예: OpenEden partnership, RWA, Ripple...)" />
+                  <button class="btn" id="btnSearch">검색</button>
+                </div>
+                <div class="foot">
+                  팁: <span class="kbd">Enter</span> 로 검색 가능. (기본은 Google 검색으로 새 탭 열림)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:14px"></div>
+
+          <div class="card" style="box-shadow:none">
+            <div class="hd">
+              <div>
+                <h2>뉴스 & 업데이트 (수집 허브)</h2>
+                <p class="sub">“자동 뉴스”는 API/CORS 제한이 있어서, 기본은 ‘검증된 소스 바로가기 + 키워드 검색’ 중심으로 설계</p>
+              </div>
+              <div class="row">
+                <button class="btn small" id="btnOpenNews">뉴스 탭 열기</button>
+                <button class="btn small" id="btnCopyKeywords">키워드 복사</button>
+              </div>
+            </div>
+            <div class="bd">
+              <div class="list" id="newsSources"></div>
+              <div class="foot">
+                ✅ 다음 단계(원하면 내가 붙여줄 수 있음): <b>CryptoPanic/NewsAPI/GDELT</b> 같은 뉴스 API를 붙이면 “이 페이지 안에서 뉴스 리스트 자동 갱신”도 가능해.
+                (단, API Key 보관은 GitHub Pages 단독으로는 안전하지 않으니, Cloudflare Worker 같은 중계가 이상적)
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="card">
+        <div class="hd">
+          <div>
+            <h2>나만의 리서치 운영 패널</h2>
+            <p class="sub">체크리스트 + 메모 + 간단 알림(로컬)</p>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="card" style="box-shadow:none">
+            <div class="hd">
+              <div>
+                <h2>트리거 체크리스트</h2>
+                <p class="sub">“10배 첫 트리거” 관점으로 매주 업데이트</p>
+              </div>
+              <button class="btn small" id="btnResetChecklist">초기화</button>
+            </div>
+            <div class="bd">
+              <div class="chk" id="checklist"></div>
+              <div class="foot">
+                체크는 브라우저에 저장돼서(로컬) 다음에 와도 유지돼.
+              </div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="card" style="box-shadow:none">
+            <div class="hd">
+              <div>
+                <h2>리서치 메모</h2>
+                <p class="sub">관찰 / 가설 / 리스크 / 다음 행동</p>
+              </div>
+              <div class="row">
+                <button class="btn small" id="btnSaveNote">저장</button>
+                <button class="btn small" id="btnCopyNote">복사</button>
+                <button class="btn small" id="btnClearNote">비우기</button>
+              </div>
+            </div>
+            <div class="bd note">
+              <textarea id="note" placeholder="예)
+- 오늘 체크: 파트너십/상장/락업/토큰공급 변화
+- 내 가설: RWA 채택이 실물 유통까지 오는 타이밍은 ~
+- 리스크: 유동성/규제/경쟁(OND0/...) 등
+- 다음 액션: 1) 공식 문서 확인 2) Dune/온체인 찾기 3) 소스 3개 교차검증
+"></textarea>
+
+              <div class="two">
+                <div>
+                  <div class="muted" style="font-size:12px; margin-bottom:8px">간단 알림(로컬)</div>
+                  <div class="row">
+                    <input class="input" id="alertKrw" placeholder="알림 가격 (KRW) 예: 120" />
+                    <button class="btn" id="btnSetAlert">설정</button>
+                    <button class="btn" id="btnClearAlert">해제</button>
+                  </div>
+                  <div class="foot">
+                    이 알림은 “이 페이지를 켜둔 상태”에서만 동작해. (서버 없이 구현한 버전)
+                  </div>
+                </div>
+                <div>
+                  <div class="muted" style="font-size:12px; margin-bottom:8px">AI 자리(미래 확장)</div>
+                  <div class="item">
+                    <div class="dot" style="background:rgba(167,139,250,.9); box-shadow:0 0 20px rgba(167,139,250,.35)"></div>
+                    <div>
+                      <h3>AI Q&A (준비중)</h3>
+                      <p>
+                        나중에 여기서 “오늘 뉴스 요약”, “리스크 체크”, “핵심 변화만 5줄 요약” 같은 걸 AI로 받게 만들 수 있어.
+                      </p>
+                      <p class="meta">
+                        추천 구조: <b>Cloudflare Worker</b>로 API 키 숨기고 → 이 페이지에서 호출(fetch)하는 형태.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="foot" style="margin-top:14px">
+            <b>주의:</b> 이 페이지는 투자 자문이 아니라 “리서치/정리 도구”야. 뉴스는 항상 2~3개 출처로 교차검증 추천.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">저장 완료</div>
+
+  <script>
+    /***********************
+     * 설정값 (여기만 바꾸면 됨)
+     ************************/
+    const CONFIG = {
+      // CoinGecko에서 찾는 코인 ID (정확하지 않을 수 있어: 실제 상장/명칭에 따라 다름)
+      // 만약 데이터가 안 뜨면 아래 getCoinIdFallback 안내대로 바꿔주면 됨.
+      coinGeckoId: "openeden", // <-- 안 뜨면 여기 수정 (예: "eden" 같은 다른 id)
+      symbolLabel: "OPENEDEN",
+      displayCurrency: "krw",
+      altCurrency: "usd",
+
+      // TradingView 심볼 (안 뜰 수 있음. 그럴 땐 거래소 링크로 보거나 심볼 수정)
+      // 예시: "BINANCE:BTCUSDT" 처럼 "거래소:심볼"
+      tradingViewSymbol: "BINANCE:EDENUSDT",
+
+      refreshMs: 60_000, // 1분마다 자동 업데이트
+    };
+
+    /***********************
+     * 유틸
+     ************************/
+    const $ = (s) => document.querySelector(s);
+    const fmtKRW = (n) => {
+      if (!isFinite(n)) return "-";
+      return n.toLocaleString("ko-KR", { maximumFractionDigits: n >= 100 ? 0 : 2 }) + "원";
+    };
+    const fmtUSD = (n) => {
+      if (!isFinite(n)) return "-";
+      return "$" + n.toLocaleString("en-US", { maximumFractionDigits: n >= 10 ? 2 : 6 });
+    };
+    const fmtBigKRW = (n) => {
+      if (!isFinite(n)) return "-";
+      // 단순 보기 좋게: 억/조 단위 근사
+      const abs = Math.abs(n);
+      const 조 = 1e12;
+      const 억 = 1e8;
+      if (abs >= 조) return (n/조).toFixed(2) + "조 원";
+      if (abs >= 억) return (n/억).toFixed(2) + "억 원";
+      return n.toLocaleString("ko-KR") + "원";
+    };
+    const setToast = (msg) => {
+      const t = $("#toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"), 1300);
+    };
+    const nowStr = () => {
+      const d = new Date();
+      return d.toLocaleString("ko-KR", { hour12:false });
+    };
+    const openTab = (url) => window.open(url, "_blank", "noopener,noreferrer");
+
+    /***********************
+     * 링크/소스 구성
+     ************************/
+    const QUICK_LINKS = [
+      {
+        title: "Binance 현물 차트",
+        desc: "거래소 차트/호가/거래량 확인",
+        url: "https://www.binance.com/en/trade/EDEN_USDT"
+      },
+      {
+        title: "CoinGecko 페이지",
+        desc: "시총/공급/거래소/히스토리",
+        url: "https://www.coingecko.com/"
+      },
+      {
+        title: "TradingView (심볼 검색)",
+        desc: "차트/지표/알람/아이디어",
+        url: "https://www.tradingview.com/"
+      },
+      {
+        title: "Google: OpenEden 공식 사이트",
+        desc: "공식 홈페이지/문서 찾기",
+        url: "https://www.google.com/search?q=OpenEden+official+site"
+      },
+      {
+        title: "Google: OpenEden docs",
+        desc: "문서/백서/토큰노믹스",
+        url: "https://www.google.com/search?q=OpenEden+docs+tokenomics"
+      },
+      {
+        title: "Google: OpenEden partnership",
+        desc: "파트너십/채택/기관 뉴스",
+        url: "https://www.google.com/search?q=OpenEden+partnership+announcement"
+      },
+    ];
+
+    const NEWS_SOURCES = [
+      { title: "공식 채널 (검색)", desc: "프로젝트 공식 X/블로그/미디움/문서 업데이트", q: "OpenEden (official) X blog Medium announcement" },
+      { title: "RWA 관련 뉴스", desc: "RWA 섹터 흐름/규제/기관 움직임", q: "RWA tokenization news regulation institutions" },
+      { title: "거래소/상장", desc: "상장/마켓 추가/유동성 변화", q: "OpenEden listing Binance Coinbase KuCoin" },
+      { title: "락업/언락/공급", desc: "토큰 언락, 공급 변화, 일정 확인", q: "OpenEden token unlock schedule supply" },
+      { title: "리플/XRP & 결제/금융 연관", desc: "사용자 관심 축: 결제/금융 인프라와의 접점 탐색", q: "OpenEden Ripple XRP partnership RWA" },
+    ];
+
+    const KEYWORDS_TO_COPY = [
+      "OpenEden",
+      "OpenEden tokenomics",
+      "OpenEden partnership",
+      "OpenEden listing",
+      "OpenEden token unlock",
+      "RWA tokenization",
+      "institutional RWA",
+      "Ripple RWA",
+      "BNY Mellon RWA",
+      "Chainlink proof of reserve",
+    ].join("\n");
+
+    const CHECKLIST_ITEMS = [
+      "공식 문서/토큰노믹스(공급·언락) 업데이트 확인",
+      "거래소 상장/마켓 추가/유동성 변화(거래량 추이) 체크",
+      "파트너십(기관·인프라·오라클·커스터디) ‘공식 출처’ 확인",
+      "경쟁/대체재 대비 포지셔닝(예: RWA 주요 프로젝트) 업데이트",
+      "규제/컴플라이언스 리스크(관할·라이선스·제휴 구조) 체크",
+      "온체인/리저브 투명성(Proof/감사/리포트 등) 자료 확인",
+      "가격이 먼저 반영하는지 vs 실사용 지표가 따라오는지 기록",
+      "내 전략(분할매수/분할매도/손절·리밸런싱) 기준 점검",
+    ];
+
+    /***********************
+     * UI 렌더
+     ************************/
+    function renderLinks(){
+      const box = $("#quickLinks");
+      box.innerHTML = "";
+      QUICK_LINKS.forEach(x=>{
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div class="dot"></div>
+          <div>
+            <h3>${x.title}</h3>
+            <p>${x.desc}</p>
+            <div class="meta">${x.url.replace(/^https?:\/\//,'')}</div>
+          </div>
+        `;
+        el.addEventListener("click", ()=>openTab(x.url));
+        box.appendChild(el);
+      });
+
+      const nb = $("#newsSources");
+      nb.innerHTML = "";
+      NEWS_SOURCES.forEach(x=>{
+        const url = "https://www.google.com/search?q=" + encodeURIComponent(x.q);
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div class="dot" style="background:rgba(52,211,153,.9); box-shadow:0 0 20px rgba(52,211,153,.35)"></div>
+          <div>
+            <h3>${x.title}</h3>
+            <p>${x.desc}</p>
+            <div class="meta">검색 키워드: ${x.q}</div>
+          </div>
+        `;
+        el.addEventListener("click", ()=>openTab(url));
+        nb.appendChild(el);
+      });
+    }
+
+    function renderChecklist(){
+      const wrap = $("#checklist");
+      wrap.innerHTML = "";
+      const saved = JSON.parse(localStorage.getItem("oe_checklist") || "{}");
+      CHECKLIST_ITEMS.forEach((text, idx)=>{
+        const id = "c_" + idx;
+        const label = document.createElement("label");
+        label.innerHTML = `
+          <input type="checkbox" id="${id}" ${saved[id] ? "checked":""} />
+          <span>${text}</span>
+        `;
+        label.querySelector("input").addEventListener("change", (e)=>{
+          saved[id] = e.target.checked;
+          localStorage.setItem("oe_checklist", JSON.stringify(saved));
+        });
+        wrap.appendChild(label);
+      });
+    }
+
+    /***********************
+     * 데이터: CoinGecko
+     ************************/
+    async function fetchCoinGecko(){
+      // /coins/markets 는 가격/시총/거래량/변동률 등 빠르게 줌
+      const url = new URL("https://api.coingecko.com/api/v3/coins/markets");
+      url.searchParams.set("vs_currency", CONFIG.displayCurrency);
+      url.searchParams.set("ids", CONFIG.coinGeckoId);
+      url.searchParams.set("price_change_percentage", "24h");
+      url.searchParams.set("sparkline", "false");
+
+      const r = await fetch(url.toString(), { headers: { "accept": "application/json" }});
+      if (!r.ok) throw new Error("CoinGecko fetch failed: " + r.status);
+      const arr = await r.json();
+      if (!arr || !arr.length) {
+        throw new Error("CoinGecko에서 코인 ID를 찾지 못했어. CONFIG.coinGeckoId를 수정해야 할 수 있어.");
+      }
+      return arr[0];
+    }
+
+    async function fetchAltPriceUSD(){
+      const url = new URL("https://api.coingecko.com/api/v3/simple/price");
+      url.searchParams.set("ids", CONFIG.coinGeckoId);
+      url.searchParams.set("vs_currencies", CONFIG.altCurrency);
+      url.searchParams.set("include_24hr_change", "true");
+      const r = await fetch(url.toString(), { headers: { "accept": "application/json" }});
+      if (!r.ok) return null;
+      return await r.json();
+    }
+
+    function applyMarketData(d, alt){
+      const price = d.current_price;
+      const mcap = d.market_cap;
+      const vol = d.total_volume;
+
+      $("#sym").textContent = (d.symbol || CONFIG.symbolLabel || "-").toUpperCase();
+      $("#priceKrw").textContent = fmtKRW(price);
+
+      // USD 보조
+      let usdStr = "-";
+      if (alt && alt[CONFIG.coinGeckoId] && isFinite(alt[CONFIG.coinGeckoId].usd)) {
+        usdStr = fmtUSD(alt[CONFIG.coinGeckoId].usd);
+      }
+      $("#priceUsd").textContent = "USD 기준: " + usdStr;
+
+      // 24h %
+      const pct = d.price_change_percentage_24h;
+      const pctEl = $("#chg24h");
+      if (isFinite(pct)) {
+        const cls = pct > 0 ? "up" : (pct < 0 ? "down" : "flat");
+        pctEl.className = "v delta " + cls;
+        pctEl.textContent = (pct >= 0 ? "+" : "") + pct.toFixed(2) + "%";
+      } else {
+        pctEl.className = "v";
+        pctEl.textContent = "-";
+      }
+
+      $("#mcap").textContent = fmtBigKRW(mcap);
+      $("#vol24h").textContent = fmtBigKRW(vol);
+
+      // 24h range (고저)
+      const low = d.low_24h;
+      const high = d.high_24h;
+      if (isFinite(low) && isFinite(high)) {
+        $("#range24h").textContent = `24h 범위: ${fmtKRW(low)} ~ ${fmtKRW(high)}`;
+      } else {
+        $("#range24h").textContent = "24h 범위: -";
+      }
+
+      $("#lastUpdated").textContent = nowStr();
+    }
+
+    /***********************
+     * TradingView 위젯 (일봉/주봉)
+     ************************/
+    let currentTF = "D";
+    function loadTradingView(tf){
+      currentTF = tf;
+      $("#tfD").classList.toggle("active", tf === "D");
+      $("#tfW").classList.toggle("active", tf === "W");
+
+      const container = $("#tvContainer");
+      container.innerHTML = "";
+
+      // TradingView embed script
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+      script.async = true;
+
+      const widgetConfig = {
+        "autosize": true,
+        "symbol": CONFIG.tradingViewSymbol,
+        "interval": tf === "D" ? "D" : "W",
+        "timezone": "Asia/Seoul",
+        "theme": "dark",
+        "style": "1",
+        "locale": "kr",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "gridColor": "rgba(255, 255, 255, 0.06)",
+        "hide_top_toolbar": false,
+        "hide_legend": false,
+        "withdateranges": true,
+        "allow_symbol_change": true,
+        "save_image": true,
+        "calendar": false,
+        "studies": ["RSI@tv-basicstudies", "MASimple@tv-basicstudies"],
+      };
+
+      script.innerHTML = JSON.stringify(widgetConfig);
+      container.appendChild(script);
+    }
+
+    /***********************
+     * 메모 / 알림
+     ************************/
+    function loadNote(){
+      $("#note").value = localStorage.getItem("oe_note") || "";
+      const a = localStorage.getItem("oe_alert_krw");
+      if (a) $("#alertKrw").value = a;
+    }
+
+    function saveNote(){
+      localStorage.setItem("oe_note", $("#note").value);
+      setToast("메모 저장됨");
+    }
+
+    function copyText(text){
+      navigator.clipboard.writeText(text).then(()=>{
+        setToast("복사 완료");
+      }).catch(()=>{
+        setToast("복사 실패 (권한 확인)");
+      });
+    }
+
+    let lastPriceKrw = null;
+    function checkAlert(){
+      const targetStr = localStorage.getItem("oe_alert_krw");
+      if (!targetStr) return;
+      const target = Number(String(targetStr).replace(/[,원\s]/g,""));
+      if (!isFinite(target) || !isFinite(lastPriceKrw)) return;
+
+      // 아주 단순: 가격이 목표 이상이면 알림
+      if (lastPriceKrw >= target) {
+        setToast(`알림: 목표가 도달! (${fmtKRW(lastPriceKrw)} ≥ ${fmtKRW(target)})`);
+        // 1회 울리면 해제(원하면 유지로 바꿀 수 있음)
+        localStorage.removeItem("oe_alert_krw");
+        $("#alertKrw").value = "";
+      }
+    }
+
+    /***********************
+     * 메인 로직
+     ************************/
+    async function refresh(){
+      try{
+        $("#btnRefresh").disabled = true;
+        const d = await fetchCoinGecko();
+        const alt = await fetchAltPriceUSD().catch(()=>null);
+        applyMarketData(d, alt);
+
+        // 알림 체크를 위해 저장
+        lastPriceKrw = d.current_price;
+        checkAlert();
+      } catch(err){
+        console.error(err);
+        setToast("데이터 로드 실패: 코인 ID/네트워크 확인");
+        $("#lastUpdated").textContent = nowStr() + " (실패)";
+      } finally{
+        $("#btnRefresh").disabled = false;
+      }
+    }
+
+    function setup(){
+      renderLinks();
+      renderChecklist();
+      loadNote();
+      loadTradingView("D");
+
+      // 버튼
+      $("#btnRefresh").addEventListener("click", refresh);
+      $("#tfD").addEventListener("click", ()=>loadTradingView("D"));
+      $("#tfW").addEventListener("click", ()=>loadTradingView("W"));
+
+      $("#btnSearch").addEventListener("click", ()=>{
+        const q = $("#searchQuery").value.trim();
+        if (!q) return setToast("검색어를 입력해줘");
+        openTab("https://www.google.com/search?q=" + encodeURIComponent(q));
+      });
+      $("#searchQuery").addEventListener("keydown", (e)=>{
+        if (e.key === "Enter") $("#btnSearch").click();
+      });
+
+      $("#btnOpenNews").addEventListener("click", ()=>{
+        // 뉴스 소스들을 탭으로 연속 오픈(브라우저 팝업 제한 있을 수 있음)
+        const first = NEWS_SOURCES[0];
+        openTab("https://www.google.com/search?q=" + encodeURIComponent(first.q));
+        setToast("뉴스 탭을 열었어");
+      });
+
+      $("#btnCopyKeywords").addEventListener("click", ()=>copyText(KEYWORDS_TO_COPY));
+
+      $("#btnSaveNote").addEventListener("click", saveNote);
+      $("#btnCopyNote").addEventListener("click", ()=>copyText($("#note").value || ""));
+      $("#btnClearNote").addEventListener("click", ()=>{
+        $("#note").value = "";
+        saveNote();
+      });
+
+      $("#btnResetChecklist").addEventListener("click", ()=>{
+        localStorage.removeItem("oe_checklist");
+        renderChecklist();
+        setToast("체크리스트 초기화");
+      });
+
+      $("#btnSetAlert").addEventListener("click", ()=>{
+        const raw = $("#alertKrw").value.trim();
+        const v = Number(raw.replace(/[,원\s]/g,""));
+        if (!isFinite(v) || v <= 0) return setToast("가격(KRW)을 숫자로 입력해줘");
+        localStorage.setItem("oe_alert_krw", String(v));
+        setToast("알림 설정됨");
+      });
+      $("#btnClearAlert").addEventListener("click", ()=>{
+        localStorage.removeItem("oe_alert_krw");
+        $("#alertKrw").value = "";
+        setToast("알림 해제됨");
+      });
+
+      // 단축키
+      window.addEventListener("keydown", (e)=>{
+        if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+        if (e.key.toLowerCase() === "r") refresh();
+      });
+
+      // 최초 로드 + 주기 업데이트
+      refresh();
+      setInterval(refresh, CONFIG.refreshMs);
+    }
+
+    setup();
+
+    /***********************
+     * (중요) 코인 데이터가 안 뜰 때 해결법
+     * 1) CoinGecko에서 OpenEden의 "coin id"를 찾아 CONFIG.coinGeckoId를 바꿔줘
+     * 2) TradingView 심볼도 실제 바이낸스 심볼과 다르면 CONFIG.tradingViewSymbol을 수정
+     ************************/
+    // ↑ 여기까지가 너가 쓴 setup(); 아래쪽
+    // 아래는 “주석이 끊긴 부분”을 포함해서 마무리 + 보강 코드야.
+
+    /***********************
+     * (중요) 코인 데이터가 안 뜰 때 해결법
+     * 1) CoinGecko에서 OpenEden의 "coin id"를 찾아 CONFIG.coinGeckoId를 바꿔줘
+     * 2) TradingView 심볼도 실제 바이낸스 심볼과 다르면 CONFIG.tradingViewSymbol을 수정
+     ***********************/
+
+    // --- 보강: 화면에 "문제 해결" 도움말을 제공 (자동으로 작은 안내 카드 생성) ---
+    const TROUBLESHOOT = {
+      geckoSearchUrl: (q) => "https://www.coingecko.com/en/search?query=" + encodeURIComponent(q),
+      tvSearchUrl: (q) => "https://www.tradingview.com/search/?query=" + encodeURIComponent(q),
+      binanceSearchUrl: (q) => "https://www.binance.com/en/search?query=" + encodeURIComponent(q),
+    };
+
+    function injectTroubleshootCard(){
+      // 오른쪽 패널 하단에 도움 카드 하나 삽입
+      const rightCardBody = document.querySelector(".grid > .card:last-child .bd");
+      if (!rightCardBody) return;
+
+      const wrap = document.createElement("div");
+      wrap.style.marginTop = "12px";
+
+      wrap.innerHTML = `
+        <div class="card" style="box-shadow:none">
+          <div class="hd">
+            <div>
+              <h2>문제 해결(코인ID/차트가 안 뜰 때)</h2>
+              <p class="sub">GitHub Pages 단일 파일에서 가장 흔한 이슈 2개</p>
+            </div>
+          </div>
+          <div class="bd">
+            <div class="list">
+              <div class="item" id="fixGecko">
+                <div class="dot" style="background:rgba(110,231,255,.9)"></div>
+                <div>
+                  <h3>1) CoinGecko 데이터가 '-'로만 뜬다</h3>
+                  <p>
+                    <b>CONFIG.coinGeckoId</b> 값이 실제 CoinGecko의 코인 ID와 다를 때 그래.
+                    CoinGecko에서 OpenEden을 검색해서 <b>주소(URL)</b>에 있는 ID를 복사해 넣으면 해결돼.
+                  </p>
+                  <p class="meta">
+                    예: coingecko.com/en/coins/<b>openeden</b> ← 이 부분이 coinGeckoId
+                  </p>
+                </div>
+              </div>
+
+              <div class="item" id="fixTV">
+                <div class="dot" style="background:rgba(167,139,250,.9)"></div>
+                <div>
+                  <h3>2) TradingView 차트가 안 뜬다</h3>
+                  <p>
+                    <b>CONFIG.tradingViewSymbol</b>이 실제 심볼과 다르거나, 해당 거래소에 심볼이 없을 때 그래.
+                    TradingView에서 “EDENUSDT” 또는 “OpenEden”으로 검색해서 심볼을 찾아 바꿔줘.
+                  </p>
+                  <p class="meta">
+                    예: BINANCE:BTCUSDT 형태로 넣어야 동작
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+
+            <div class="row">
+              <button class="btn" id="btnFindGecko">CoinGecko에서 OpenEden 검색</button>
+              <button class="btn" id="btnFindTV">TradingView에서 심볼 검색</button>
+              <div class="spacer"></div>
+              <button class="btn small" id="btnCopyConfig">CONFIG 복사용 템플릿</button>
+            </div>
+
+            <div class="foot">
+              ✅ 팁: 수정 후 GitHub Pages 반영이 느리면 <span class="kbd">Ctrl/⌘ + Shift + R</span>로 강력 새로고침 해줘.
+            </div>
+          </div>
+        </div>
+      `;
+
+      rightCardBody.appendChild(wrap);
+
+      // 버튼 이벤트
+      $("#btnFindGecko")?.addEventListener("click", ()=> openTab(TROUBLESHOOT.geckoSearchUrl("OpenEden")));
+      $("#btnFindTV")?.addEventListener("click", ()=> openTab(TROUBLESHOOT.tvSearchUrl("EDENUSDT")));
+      $("#btnCopyConfig")?.addEventListener("click", ()=>{
+        const tpl = [
+          "const CONFIG = {",
+          `  coinGeckoId: "${CONFIG.coinGeckoId}",`,
+          `  tradingViewSymbol: "${CONFIG.tradingViewSymbol}",`,
+          `  displayCurrency: "${CONFIG.displayCurrency}",`,
+          `  altCurrency: "${CONFIG.altCurrency}",`,
+          "  refreshMs: 60000,",
+          "};"
+        ].join("\n");
+        copyText(tpl);
+      });
+
+      // 클릭 시 해당 검색도 열어주기
+      $("#fixGecko")?.addEventListener("click", ()=> openTab(TROUBLESHOOT.geckoSearchUrl("OpenEden")));
+      $("#fixTV")?.addEventListener("click", ()=> openTab(TROUBLESHOOT.tvSearchUrl("OpenEden")));
+    }
+
+    // --- 보강: 에러가 났을 때, 사용자가 바로 무엇을 해야 하는지 힌트 강화 ---
+    function setErrorState(msg){
+      setToast(msg || "데이터 로드 실패");
+      $("#priceKrw").textContent = "-";
+      $("#priceUsd").textContent = "USD 기준: -";
+      $("#chg24h").textContent = "-";
+      $("#mcap").textContent = "-";
+      $("#vol24h").textContent = "-";
+      $("#range24h").textContent = "24h 범위: -";
+      $("#lastUpdated").textContent = nowStr() + " (확인 필요)";
+    }
+
+    // 기존 refresh()를 조금 더 친절하게 오버라이드(덮어쓰기)
+    const _refresh = refresh;
+    refresh = async function(){
+      try{
+        $("#btnRefresh").disabled = true;
+        const d = await fetchCoinGecko();
+        const alt = await fetchAltPriceUSD().catch(()=>null);
+        applyMarketData(d, alt);
+
+        lastPriceKrw = d.current_price;
+        checkAlert();
+      } catch(err){
+        console.error(err);
+        // 어떤 종류의 실패인지 간단 분기
+        const m = String(err?.message || "");
+        if (m.includes("CoinGecko에서 코인 ID")) {
+          setErrorState("CoinGecko 코인ID가 안 맞는 듯! 아래 ‘CoinGecko 검색’ 눌러서 ID 확인해줘.");
+        } else if (m.includes("CoinGecko fetch failed")) {
+          setErrorState("CoinGecko 응답이 막혔거나 지연 중이야. 잠깐 후 새로고침(R)!");
+        } else {
+          setErrorState("데이터 로드 실패: 네트워크/ID 확인 필요");
+        }
+      } finally{
+        $("#btnRefresh").disabled = false;
+      }
+    };
+
+    // setup() 실행 직후 도움 카드 삽입
+    // (setup();은 이미 위에서 호출했으니, DOM이 준비된 뒤 실행)
+    try { injectTroubleshootCard(); } catch(e) { /* noop */ }
+
+    /***********************
+     * 보너스: 향후 AI 붙일 때 추천 구조(가볍게 가이드만)
+     * - GitHub Pages는 API Key를 숨길 수 없어(코드가 그대로 노출됨)
+     * - 그래서 Cloudflare Worker 같은 “중계 서버”를 두고
+     *   이 페이지에서 fetch로 호출하는 게 안전해.
+     *
+     * 원하면 다음 단계로:
+     * 1) Cloudflare Worker 템플릿
+     * 2) OpenAI/뉴스API 키 숨김
+     * 3) 이 페이지에서 "오늘 뉴스 5줄 요약" 버튼 구현
+     ***********************/
+  </script>
+</body>
+</html>
